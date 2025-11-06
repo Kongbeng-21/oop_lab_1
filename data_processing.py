@@ -12,6 +12,22 @@ with open(os.path.join(__location__, 'Cities.csv')) as f:
 # Print first 5 cities only
 for city in cities[:5]:
     print(city)
+def filter(condition, dict_list):
+    temps = []
+    for item in dict_list:
+        if condition(item):
+            temps.append(item)
+    return temps
+
+def aggregate(aggregation_key, aggregation_function, dict_list):
+    temps = []
+    for item in dict_list:
+        try:
+            temps.append(float(item[aggregation_key]))
+        except ValueError:
+            temps.append(item[aggregation_key])
+    return aggregation_function(temps)
+
 
 # Print the average temperature of all the cities
 print("The average temperature of all the cities:")
@@ -29,35 +45,38 @@ print()
 
 # Print all cities in Germany
 
-'''
-Your code here
-
-'''
+print("All cities in Germany")
+filtered_list = filter(lambda x: x["country"]  == "Germany", cities)
+germany = aggregate('city', lambda x: x, filtered_list)
+print(germany)
+print()
 
 # Print all cities in Spain with a temperature above 12°C
 
-'''
-Your code here
-
-'''
-
+print("All cities in Spain with a temperature above 12°C")
+filtered_list = filter(lambda x: x["country"] == "Spain", cities)
+spain_above12 = filter(lambda x: float(x['temperature']) > 12 ,filtered_list)
+city_only = aggregate('city', lambda x: x, spain_above12)
+print(city_only)
+print()
 # Count the number of unique countries
 
-'''
-Your code here
-
-'''
-
+print("Number of unique countires")
+all_count = aggregate('country', lambda x:x,cities)
+all_count = set(all_count)
+print(len(all_count))
+print()
 # Print the average temperature for all the cities in Germany
 
-'''
-Your code here
-
-'''
-
+print("Average temperature for all the cities in Germany")
+germany = filter(lambda x:x["country"] == "Germany",cities)
+avg = aggregate('temperature',lambda x:sum(x)/len(x),germany)
+print(avg)
+print()
 # Print the max temperature for all the cities in Italy
 
-'''
-Your code here
-
-'''
+print("Max temperature for all the cities in Italy")
+ita = filter(lambda x:x['country'] == "Italy",cities)
+ita_max = aggregate('temperature',lambda x:max(x),ita)
+print(ita_max)
+print()
